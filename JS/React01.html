@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>React Tworca</title>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <!-- dont use in production -->
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+</head>
+<body>
+    <div id="app"></div>
+
+    <script type="text/babel">
+
+        var myHello = "ReAcT";
+
+        function My_List(){ 
+
+                var nameArray = ["Aaaa", "Bbb", "Cccc"];
+                var nameArrayJSX = nameArray.map(toList => <li>{ toList }</li>);
+                var showList = true;
+                return(
+                    <div>
+                    { showList? <ul> { nameArrayJSX } </ul>: "No names..." }
+                    </div>
+                )
+        }
+
+        class My_Compo extends React.Component {  //  component // MyCompo
+            render(){ return( 
+                <div id="container">
+
+                    <h1>Hello { myHello }</h1>
+                    <My_List /> 
+                        
+                </div>
+            )}
+        }
+
+        ReactDOM.render( 
+            < My_Compo />,
+            document.querySelector('#app')
+        )
+    </script>
+</body>
+</html>
