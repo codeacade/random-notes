@@ -1,0 +1,25 @@
+// START SERVER FIRST WITH:
+//
+// npx json-server --watch ./src/db.json --port 4000
+//
+// JSON must be an object. Array JSON wont work [{"id": 223344}]
+
+{
+  "elements": [
+    {
+      "id": 223344,
+      "title": "Buy nuts and crisps!",
+      "isDone": false
+    },
+    {
+      "id": 223355,
+      "title": "Charge phone and watch",
+      "isDone": true
+    },
+    {
+      "id": 223366,
+      "title": "Abcde",
+      "isDone": false
+    }
+  ]
+}
