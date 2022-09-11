@@ -1,3 +1,12 @@
+// recreating ct8 node / React enviromnment: wiki.mydevil.net/React
+// lots of changes made, lots of errors fixed
+// improved communication betweer front and back end
+// All API writen after day of investingation
+// GET (easy), PUT and POST with req.body and DELETE with req.params
+// modals ID issue fixed
+// database update/fetching fixed
+// OPTIONAL - /api/:x URL to investigate further
+
 const express = require('express');
 const app = express();
 app.use(express.json())  // do magic with "put", "post"
