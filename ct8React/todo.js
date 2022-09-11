@@ -1,36 +1,42 @@
 // recreating ct8 node / React enviromnment: wiki.mydevil.net/React
+// lots of changes made, lots of errors fixed
+// improved communication betweer front and back end
+// modals ID issue fixed
+// database update/fetching fixed
 
 import React from 'react';
 
 const TodoItem = ( props ) => {   // state-less component for each single note
   const classNameNotDone = "card flex-row justify-content-end";
   const classNameDone = "card completed flex-row justify-content-end";
+  var itemTitile = props.element.title;
+  var itemId = props.element.id;
 
   return (
     <div>
-      <div className={ props.element.isDone? classNameDone : classNameNotDone } key={ props.element.id }>
+      <div className={ props.element.isDone? classNameDone : classNameNotDone } key={ itemId }>
         <h4 className="text-dark mx-auto" onClick={ 
-          () => props.passFromParent(props.element.id) }>
-            { props.element.title } 
+          () => props.passFromParent(itemId) }>
+            { itemTitile } 
         </h4>
-        <button className="btn btn-danger text-light" data-bs-toggle="modal" data-bs-target="#myModal">
+        <button className="btn btn-danger text-light" data-bs-toggle="modal" data-bs-target={ "#modal" + itemId }>
             { <i className="bi bi-trash"></i> }
         </button>
       </div> 
 
-      <div className="modal fade" id="myModal" role="dialog">
+      <div className="modal fade" id={ "modal" + itemId } role="dialog">
         <div className="modal-dialog">
           <div className="modal-content">
             <div className="modal-header">
               <h5 className="modal-title">
-                Delete note: { props.element.title } ?
+                Delete note: { itemTitile } ?
               </h5>
               <button type="button" className="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div className="modal-footer">
               <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
               <button type="button" className="btn btn-danger" data-bs-dismiss="modal" onClick={ 
-                () => props.deleteMe(props.element.id) }>
+                () => props.deleteMe(itemId) }>
                 Delete
               </button>
             </div>
@@ -52,10 +58,7 @@ class Todo extends React.Component{  // main component
   fetchJson = () => {  // method to refresh item list
     fetch('/api/')
     .then( res => res.json())
-    .then( data => {
-      this.setState({ elements: data.elements})
-      console.log(typeof data)
-    })
+    .then( data => this.setState({elements: data.elements}))
   }
 
   passToChild = (id) => {  // child id comes back from child
@@ -78,6 +81,7 @@ class Todo extends React.Component{  // main component
 
   deleteChild = (id) => {   // to remove item from JSON and then refresh list
     fetch('/api/' + id, { method: 'DELETE' })
+    .then((response) => console.log(response))   // wait for database to be updated
     .then( this.fetchJson )  // refresh items list
   }
 
@@ -91,7 +95,6 @@ class Todo extends React.Component{  // main component
       title: this.state.newElement,
       isDone: false
     }
-    this.setState({ elements: [newRow, ...this.state.elements]});
     this.setState({ newElement: ""});
 
     fetch('/api/', {  // POST method to store amended list
@@ -99,6 +102,7 @@ class Todo extends React.Component{  // main component
       headers: { 'Content-Type': 'application/json'},
       body: JSON.stringify(newRow)
     })
+    .then((response) => console.log(response))   // wait for database to be updated
     .then( this.fetchJson )  // refresh items list
   }
 
@@ -107,7 +111,7 @@ class Todo extends React.Component{  // main component
   }
 
   render() {
-    const elements = this.state.elements.reverse().map(item => {
+    const elements = this.state.elements.map(item => {
       return ( < TodoItem element={ item } passFromParent={ this.passToChild }
         deleteMe={ this.deleteChild }  /> )
     })
